@@ -134,9 +134,10 @@ class StartupView(View, Events, FieldValidate):
 
         # Load image and resize for About page
         self.canvas = builder.get_object("c_about_logo")
-        self.logo_file = Image.open(str(PROJECT_PATH) + "/media/" + "Glitchy.png")
-        # self.resized_logo = self.logo_file.resize((200, 200), resample=Image.LANCZOS)
-        self.logo = ImageTk.PhotoImage(self.logo_file)
+
+        # Use Tk-native PNG loader (avoids PIL.ImageTk / _imagingtk segfaults)
+        logo_path = str(PROJECT_PATH / "media" / "Glitchy.png")
+        self.logo = tk.PhotoImage(file=logo_path)  # keep reference on self!
         self.canvas.create_image(0, 0, image=self.logo, anchor="nw")
 
         self.glitchyController = controller
